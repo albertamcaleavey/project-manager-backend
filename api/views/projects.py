@@ -25,3 +25,11 @@ def create():
   db.session.add(project)
   db.session.commit()
   return jsonify(project.serialize()), 201
+
+
+# indexing projects- route
+@projects.route('/', methods=["GET"])
+
+def index():
+  projects = Project.query.all()
+  return jsonify([project.serialize() for project in projects]), 200
