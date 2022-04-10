@@ -5,6 +5,7 @@ from api.middleware import login_required, read_token
 
 from api.models.db import db
 from api.models.project import Project
+from api.models.task import Task
 
 projects = Blueprint('projects', 'projects')
 
@@ -61,3 +62,29 @@ def delete(id):
   db.session.delete(project)
   db.session.commit()
   return jsonify(message="Success"), 200
+
+#--------------------------------------------
+# TASKS
+
+# create a task - route
+
+@projects.route('/<id>/tasks', methods=["POST"])
+@login_required
+def add_task(id):
+  data = request.get_json()
+  data["project_id"] = id
+
+  profile = read_token(request)
+  project = Project.query.filter_by(id=id).first()
+
+  if project.profile_id != profile["id"]:
+    return 'Forbidden', 403
+
+  task = Task(**data)
+
+  db.session.add(task)
+  db.session.commit()
+
+  project_data = project.serialize()
+  
+  return jsonify(project_data), 201

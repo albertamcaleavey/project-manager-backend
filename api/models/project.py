@@ -8,10 +8,13 @@ class Project(db.Model):
     deadline = db.Column(db.Date)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     profile_id = db.Column(db.Integer, db.ForeignKey('profiles.id'))
+    tasks = db.relationship("Task", cascade='all')
 
     def __repr__(self):
       return f"Project('{self.id}', '{self.name}'"
 
     def serialize(self):
       project = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+      tasks = [task.serialize() for task in self.tasks] 
+      project['tasks'] = tasks
       return project
