@@ -30,6 +30,16 @@ def create():
 # indexing projects- route
 @projects.route('/', methods=["GET"])
 
+# index controller
 def index():
   projects = Project.query.all()
   return jsonify([project.serialize() for project in projects]), 200
+
+# show project- route
+@projects.route('/<id>', methods=["GET"])
+
+# show controller
+def show(id):
+  project = Project.query.filter_by(id=id).first()
+  project_data = project.serialize()
+  return jsonify(project=project_data), 200
