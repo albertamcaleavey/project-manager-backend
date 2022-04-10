@@ -1,3 +1,5 @@
+from crypt import methods
+import profile
 from flask import Blueprint, jsonify, request
 from api.middleware import login_required, read_token
 
@@ -43,3 +45,19 @@ def show(id):
   project = Project.query.filter_by(id=id).first()
   project_data = project.serialize()
   return jsonify(project=project_data), 200
+
+# delete project - route
+@projects.route('/<id>', methods=["DELETE"])
+
+# delete controller
+@login_required
+def delete(id):
+  profile = read_token(request)
+  project = Project.query.filter_by(id=id).first()
+
+  if project.profile_id != profile["id"]:
+    return 'Forbidden', 403
+
+  db.session.delete(project)
+  db.session.commit()
+  return jsonify(message="Success"), 200
