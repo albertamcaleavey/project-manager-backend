@@ -1,5 +1,7 @@
 from datetime import datetime
 from sqlite3 import dbapi2
+
+from sqlalchemy import false
 from api.models.db import db
 
 class Task(db.Model):
@@ -8,6 +10,7 @@ class Task(db.Model):
   description = db.Column(db.String)
   date = db.Column(db.Date)
   created_at = db.Column(db.DateTime, default=datetime.now(tz=None))
+  complete = db.Column(db.Boolean, default=false)
   project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
 
   def __repr__(self):
@@ -18,6 +21,7 @@ class Task(db.Model):
       "id": self.id,
       "project_id": self.project_id,
       "description": self.description,
-      "date": self.date
+      "date": self.date,
+      "complete": self.complete
     }
 
