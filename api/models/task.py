@@ -10,7 +10,7 @@ class Task(db.Model):
   description = db.Column(db.String)
   date = db.Column(db.Date)
   created_at = db.Column(db.DateTime, default=datetime.now(tz=None))
-  complete = db.Column(db.Boolean, default=false)
+  complete = db.Column(db.Boolean, default=False)
   project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
 
   def __repr__(self):
