@@ -17,6 +17,7 @@ projects = Blueprint('projects', 'projects')
 @login_required
 def create():
   # data is a variable holding the parsed json request data
+  # print(request)
   data = request.get_json()
   # retrieve user's profile data with read_token middleware function
   profile = read_token(request)
@@ -35,6 +36,7 @@ def create():
 
 # index controller
 def index():
+  print(request)
   projects = Project.query.all()
   return jsonify([project.serialize() for project in projects]), 200
 
@@ -88,3 +90,20 @@ def add_task(id):
   project_data = project.serialize()
   
   return jsonify(project_data), 201
+
+
+# @projects.route('/<id>/tasks/<taskid>', methods=["GET", "PUT"])
+
+# @login_required
+# def update(taskid):
+#   data = request.get_json()
+#   profile = read_token(request)
+#   task = Task.query.filter_by(taskid).first()
+
+#   if task.profile_id != profile["id"]:
+#     return 'Forbidden', 403
+#   for key in data:
+#     setattr(task, key, data[key])
+
+#   db.session.commit()
+#   return jsonify(task.serialize()), 200
